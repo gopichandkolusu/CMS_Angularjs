@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html ng-app="amazon">
+
+<head>
+    <title>Amazon Website</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.js"></script>
+    <script src="http://unpkg.com/angular-ui-router/release/angular-ui-router.min.js"></script>
+</head>
+<style type="text/css">
+.srch {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.menu {
+    display: flex;
+    align-items: center;
+    padding: 30px;
+    justify-content: space-around;
+    background-color: teal;
+}
+
+#text {
+    width: 300px;
+    height: 20px;
+}
+
+ul,
+li {
+    font-size: 25px;
+}
+
+.menu a {
+    text-decoration: none;
+    font-size: 30px;
+    color: white;
+}
+</style>
+
+<body>
+    <div>
+        <div class="srch">
+            <img src="https://www.google.com/logos/doodles/2015/googles-new-logo-5078286822539264.3-hp2x.gif" width="150px" height="80px">
+            <input id="text" type="text" name="search" placeholder="Search here" width="150px" height="50px">
+        </div>
+    </div>
+    <div class="menu">
+        <a ui-sref="home"> Home </a>
+        <a ui-sref="customers"> Customers </a>
+        <a ui-sref="addcustomer"> Add Customer </a>
+    </div>
+    <section>
+        <ui-view> </ui-view>
+    </section>
+</body>
+<script type="text/javascript">
+var app = angular.module("amazon", ['ui.router']);
+
+app.config(function($urlRouterProvider, $stateProvider) {
+    $urlRouterProvider.otherwise('/home');
+
+    $stateProvider.state('home', {
+        url: '/home',
+        templateUrl: 'home.html'
+    });
+
+    $stateProvider.state('customers', {
+        url: '/customers',
+        templateUrl: 'customers.html',
+        controller: 'listcontroller as list'
+    });
+
+    $stateProvider.state('addcustomer', {
+        url: '/addcustomer',
+        templateUrl: 'addcustomer.html',
+        controller: 'addController as add'
+    });
+
+    $stateProvider.state('editcustomer', {
+        url: '/editcustomer',
+        templateUrl: 'editcustomer.html',
+        controller: 'editController as edit'
+    });
+
+
+
+});
+
+app.service("services", function($http) {
+
+
+    this.oneCustomer = {};
+
+    this.getCustomers = function() {
+        return $http.get("/contactsList");
+    }
+    this.postNewCustomer = function(record) {
+        console.log("record=" + record);
+        return $http.post("/addContact", record);
+    }
+    this.getCustomerDetails = function(id) {
+
+        return $http.get("/getContact?id=" + id);
+        console.log(getCustomerDetails);
+    };
+    this.postCustomerRecord = function(record) {
+        console.log("button");
+        return $http.post("/updateContact", record);
+    };
+    this.setCurrentRecord = function(record) {
+        this.oneCustomer = record;
+    };
+
+    this.getCurrentRecord = function() {
+        return this.oneCustomer;
+    };
+
+    this.deleteCustomerRecord = function(record) {
+        return $http.post("/deleteContact", record);
+    };
+});
+
+app.controller("listcontroller", function(services) {
+    var that = this;
+    that.customers = {};
+    services.getCustomers().then(
+        function(response) {
+            that.customers = response.data.contactList;
+        });
+});
+
+app.controller("addController", function($state, services) {
+    var that = this;
+
+    that.oneCustomer = {};
+    that.addCustomer = function() {
+        var result = services.postNewCustomer(that.oneCustomer);
+        result.then(function(response) {
+            console.log("hello");
+            $state.go("customers");
+
+        });
+    }
+});
+
+app.controller("editController", function($state, services) {
+    var that = this;
+
+    that.oneCustomer = services.getCurrentRecord();
+    console.log("onecustomer" + oneCustomer);
+
+    that.startEditProcess = function(id) {
+        services.getCustomerDetails(id).then(function(response) {
+
+            that.oneCustomer = response.data;
+
+            console.log("oneCustomer=" + JSON.stringify(that.oneCustomer));
+
+            services.setCurrentRecord(that.oneCustomer);
+
+            $state.go('editcustomer');
+
+        });
+    };
+
+
+    that.updateCustomer = function() {
+        console.log(oneCustomer);
+        var result = services.postCustomerRecord(that.oneCustomer);
+        result.then(function(response) {
+            $state.go("customers");
+        });
+
+    }
+});
+
+app.controller("deleteController", function($state, services) {
+    var that = this;
+
+    that.oneCustomer = {};
+
+    that.deleteCustomer = function(id) {
+        console.log(oneCustomer);
+        that.oneCustomer.id = id;
+        var result = services.deleteCustomerRecord(that.oneCustomer);
+        result.then(function(response) {
+            $state.reload();
+        });
+
+    }
+});
+</script>
+
+</html>

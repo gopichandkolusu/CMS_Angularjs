@@ -1,0 +1,42 @@
+<div id="tab">
+    <br>
+    <table>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Address</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Edit Here</th>
+            <th>Delete Here</th>
+        </tr>
+        <tr ng-repeat="user in list.customers">
+            <td>{{user.firstname}}</td>
+            <td>{{user.lastname}}</td>
+            <td>{{user.address}}</td>
+            <td>{{user.email}}</td>
+            <td>{{user.phone}}</td>
+            <td>
+                <button ng-controller="editController as edit" type="button" ng-click="edit.startEditProcess(customer.id);"> EDIT
+                </button>
+            </td>
+            <td>
+                <button ng-controller="deleteController as delete" type="button" ng-click="delete.deleteCustomer(customer.id);"> Delete
+            </td>
+        </tr>
+    </table>
+</div>
+<style type="text/css">
+#tab {
+    display: flex;
+    justify-content: center;
+    padding: 30px;
+}
+
+table,
+th,
+td {
+    border: 1px solid black;
+    padding: 5px;
+}
+</style>

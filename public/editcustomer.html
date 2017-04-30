@@ -1,0 +1,43 @@
+<div ng-controller="editController as edit">
+    <form name="edit">
+        <div class="rTable">
+            <div class="rTableRow">
+                <div class="rTableCell">FirstName </div>
+                <div class="rTableCell">
+                    <input ng-model="edit.oneCustomer.firstname" />
+                </div>
+            </div>
+            <div class="rTableRow">
+                <div class="rTableCell">Last Name </div>
+                <div class="rTableCell">
+                    <input ng-model="edit.oneCustomer.lastname" />
+                </div>
+            </div>
+            <div class="rTableRow">
+                <div class="rTableCell">Address </div>
+                <div class="rTableCell">
+                    <input ng-model="edit.oneCustomer.address" />
+                    <input type="hidden" ng-model="edit.oneCustomer.id">
+                </div>
+            </div>
+            <div class="rTableRow">
+                <div class="rTableCell">Phone </div>
+                <div class="rTableCell">
+                    <input ng-model="edit.oneCustomer.phone" />
+                </div>
+            </div>
+            <div class="rTableRow">
+                <div class="rTableCell">Email </div>
+                <div class="rTableCell">
+                    <input ng-model="edit.oneCustomer.email" />
+                </div>
+            </div>
+            <div class="rTableRow">
+                <div class="rTableCell">
+                    <button type="button" ng-click="edit.updateCustomer();"> Submit</button>
+                    <button type="button" ng-click="edit.cancel();"> Cancel</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
