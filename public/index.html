@@ -6,6 +6,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.js"></script>
     <script src="http://unpkg.com/angular-ui-router/release/angular-ui-router.min.js"></script>
 </head>
+    
 <style type="text/css">
 .srch {
     display: flex;
@@ -34,7 +35,7 @@ li {
 .menu a {
     text-decoration: none;
     font-size: 30px;
-    color: white;
+    color: blue;
 }
 </style>
 
@@ -88,7 +89,6 @@ app.config(function($urlRouterProvider, $stateProvider) {
 });
 
 app.service("services", function($http) {
-
 
     this.oneCustomer = {};
 
